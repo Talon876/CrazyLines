@@ -12,10 +12,11 @@ import engine.Framework;
 
 public class BaseGame
 {
-	Effect effect = new Effect();
+	GradientEffect gradientEffect = new GradientEffect();
 	CrazyLine line = new CrazyLine();
 	CrazyLine line2 = new CrazyLine();
 	ArrayList<CrazyLine> lines = new ArrayList<CrazyLine>(); //used to hold all the lines
+	LineEffect lineEffect = new LineEffect();
 	
 	public BaseGame()
 	{
@@ -49,12 +50,12 @@ public class BaseGame
 		Color transRed = new Color(Color.blue.getRed(), Color.blue.getGreen(), Color.blue.getBlue(), 128);
 		line.color = transRed;
 		line.activator = this; //giving an instance of CrazyLine a way to call updateGradient in this class
-		effect.setColor1(line.color);
+		gradientEffect.setColor1(line.color);
 		
 		Color transBlue = new Color(Color.white.getRed(), Color.white.getGreen(), Color.white.getBlue(), 128);
 		line2.color = transBlue;
 		line2.activator = this;
-		effect.setColor2(line2.color);
+		gradientEffect.setColor2(line2.color);
 		
 		lines.add(line);
 		lines.add(line2);
@@ -69,11 +70,12 @@ public class BaseGame
 	public void updateGame(long gameTime, Point mousePosition)
 	{
 		checkForInput(mousePosition);
-		effect.update();
+		gradientEffect.update();
 		for(CrazyLine line : lines) //update all the lines
 		{
 			line.update();
 		}
+		lineEffect.update();
 		
 	}
 
@@ -93,11 +95,13 @@ public class BaseGame
 
 	public void draw(Graphics2D g2d, Point mousePosition)
 	{
-		effect.draw(g2d); //draw the rotating gradient effect
+		gradientEffect.draw(g2d); //draw the rotating gradient effect
+		lineEffect.draw(g2d);
 		for(CrazyLine line : lines) //draw all the lines
 		{
 			line.draw(g2d);
 		}
+		
 	}
 	
 	/**
@@ -109,11 +113,12 @@ public class BaseGame
 	{
 		if(sender.equals(line)) //when line 1 changes colors, set the color1 in the effect to be the same color
 		{
-			effect.setColor1(color);
+			gradientEffect.setColor1(color);
+			lineEffect.shuffle();
 		}
 		else if(sender.equals(line2)) //when line 2 changes colors, set the color2 in the effect to be the same color
 		{
-			effect.setColor2(color);
+			gradientEffect.setColor2(color);
 		}
 	}
 }
